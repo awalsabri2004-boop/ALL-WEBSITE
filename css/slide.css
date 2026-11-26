@@ -1,0 +1,29 @@
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.show{position:relative;width:100%;height:100%;overflow:hidden;background:#000}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease}
+.slide.active{opacity:1}
+.slide img,.slide video{width:100%;height:100%;object-fit:cover;transform:scale(1);transition:transform 6s linear}
+.slide.active img,.slide.active video{transform:scale(1.12)}
+.slide::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 55%)}
+
+/* ── Photo Slide ───────────────────────────────────────────────── */
+.slide.photo-slide img{filter:brightness(.95) saturate(1.05)}
+.slide.photo-slide::after{background:linear-gradient(to top,rgba(0,0,0,.7),transparent 50%)}
+.cap{position:absolute;left:6%;bottom:14%;z-index:2;max-width:80%;opacity:0;transform:translateY(24px);transition:all .8s ease .4s}
+.slide.active .cap{opacity:1;transform:none}
+.cap small{letter-spacing:.3em;text-transform:uppercase;font-size:clamp(12px,1.6vw,16px);opacity:.85}
+.cap h2{font-size:clamp(36px,8vw,92px);line-height:1;margin:.15em 0;font-weight:800}
+.cap p{font-size:clamp(14px,2vw,20px);opacity:.9;margin-bottom:1em}
+.cap a{display:inline-block;padding:.7em 1.6em;background:#fff;color:#111;text-decoration:none;font-weight:700;border-radius:99px;font-size:14px;transition:transform .2s ease,background .2s ease}
+.cap a:hover{transform:translateY(-2px);background:#f0f0f0}
+.bars{position:absolute;left:6%;right:6%;bottom:6%;display:flex;gap:8px;z-index:3;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bar{flex:1;height:4px;background:rgba(255,255,255,.3);border-radius:2px;overflow:hidden;cursor:pointer}
+.bar i{display:block;height:100%;width:0;background:#fff}
+.bar.done i{width:100%}
+.bar.active i{animation:fill 6s linear forwards}
+.paused .bar.active i,.paused .slide.active img,.paused .slide.active video{animation-play-state:paused}
+@keyframes fill{to{width:100%}}
+.btn{position:absolute;top:50%;z-index:3;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:0;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer}
+.prev{left:12px}.next{right:12px}
+.pp{top:calc(16px + env(safe-area-inset-top,0px));right:16px;transform:none}

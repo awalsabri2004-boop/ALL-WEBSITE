@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TARUMT Collaboration – Video Slide</title>
+  <link rel="stylesheet" href="../css/brightness.css">
+  <link rel="stylesheet" href="../css/slide.css">
+</head>
+<body>
+
+<!-- SLIDE SHOW -->
+  <div class="show" id="show">
+    <div class="slide active">
+      <img src="../image/IMAGE INTRO.jpg" alt="TARUMT collaboration photo">
+      <div class="cap">
+        <small>Collaboration</small>
+        <h2>TARUMT</h2>
+        <p>A memorable moment captured during our student collaboration.</p>
+        <a href="../index.html" target="_top">View Portfolio</a>
+      </div>
+    </div>
+
+        <div class="slide">
+        <video src="../videos/SLIDE%201.mp4" autoplay muted loop playsinline></video>
+        <div class="cap">
+            <small>Collaboration</small>
+            <h2>TARUMT</h2>
+            <p>Student collaboration moments and project highlights.</p>
+            <a href="../index.html" target="_top">View Portfolio</a>
+        </div>
+        </div>
+
+        <div class="slide">
+        <video src="../videos/SLIDE%202.mp4" autoplay muted loop playsinline></video>
+        <div class="cap">
+            <small>Collaboration</small>
+            <h2>TARUMT</h2>
+            <p>Learning, building, and growing together.</p>
+            <a href="../index.html" target="_top">View Portfolio</a>
+        </div>
+        </div>
+
+    <div class="slide">
+    <video src="../videos/SLIDE%203.mp4" autoplay muted loop playsinline></video>
+    <div class="cap">
+        <small>Collaboration</small>
+        <h2>TARUMT</h2>
+        <p>Teamwork behind our software engineering projects.</p>
+        <a href="../index.html" target="_top">View Portfolio</a>
+    </div>
+    </div>
+
+    <div class="slide">
+    <video src="../videos/SLIDE%204.mp4" autoplay muted loop playsinline></video>
+    <div class="cap">
+        <small>Collaboration</small>
+        <h2>TARUMT</h2>
+        <p>Sharing ideas and building practical solutions.</p>
+        <a href="../index.html" target="_top">View Portfolio</a>
+    </div>
+    </div>
+
+    <div class="slide">
+    <video src="../videos/SLIDE%205.mp4" autoplay muted loop playsinline></video>
+    <div class="cap">
+        <small>Collaboration</small>
+        <h2>TARUMT</h2>
+        <p>Creativity and collaboration in every project.</p>
+        <a href="../index.html" target="_top">View Portfolio</a>
+    </div>
+    </div>
+
+    <div class="slide">
+      <video src="../videos/SLIDE%206.mp4" autoplay muted loop playsinline></video>
+      <div class="cap">
+        <small>Collaboration</small>
+        <h2>TARUMT</h2>
+        <p>Celebrating our journey as TARUMT students.</p>
+        <a href="../index.html" target="_top">View Portfolio</a>
+      </div>
+    </div>
+
+    <!-- Photo slide -->
+    <div class="slide photo-slide">
+      <img src="../image/IMAGE_SLIDE_7_square.jpg" alt="TARUMT collaboration photo">
+      <div class="cap">
+        <small>Collaboration</small>
+        <h2>TARUMT</h2>
+        <p>A memorable moment captured during our student collaboration.</p>
+        <a href="../index.html" target="_top">View Portfolio</a>
+      </div>
+    </div>
+
+    <button class="btn prev" aria-label="Previous">&#8249;</button>
+    <button class="btn next" aria-label="Next">&#8250;</button>
+    <button class="btn pp" id="pp" aria-label="Pause">&#10074;&#10074;</button>
+    <div class="bars" id="bars"></div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const bars = document.getElementById('bars');
+    const show = document.getElementById('show');
+    const DUR = 6000;
+    let cur = 0;
+    let timer = null;
+    let playing = true;
+
+    slides.forEach((_, i) => {
+      const b = document.createElement('div');
+      b.className = 'bar';
+      b.innerHTML = '<i></i>';
+      b.onclick = () => go(i);
+      bars.appendChild(b);
+    });
+    const bs = [...bars.children];
+
+    function go(n) {
+      cur = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+      bs.forEach((b, i) => {
+        b.classList.remove('active', 'done');
+        void b.offsetWidth;
+        if (i < cur) b.classList.add('done');
+        if (i === cur) b.classList.add('active');
+      });
+      clearTimeout(timer);
+      if (playing) timer = setTimeout(() => go(cur + 1), DUR);
+    }
+
+    document.querySelector('.next').onclick = () => go(cur + 1);
+    document.querySelector('.prev').onclick = () => go(cur - 1);
+    document.getElementById('pp').onclick = (e) => {
+      playing = !playing;
+      show.classList.toggle('paused', !playing);
+      e.target.textContent = playing ? '❚❚' : '▶';
+      go(cur);
+    };
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') go(cur + 1);
+      if (e.key === 'ArrowLeft') go(cur - 1);
+    });
+
+    go(0);
+  </script>
+</body>
+</html>

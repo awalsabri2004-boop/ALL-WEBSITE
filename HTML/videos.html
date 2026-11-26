@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Shahwal Sabri — Project Collaboration</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+    <!-- HERO / PAGE HEADER -->
+    <header class="hero">
+        <div class="avatar"><img src="../image/profile4.png.jpeg" alt="profile"></div>
+        <h1>Shahwal Sabri</h1>
+        <p class="role">Software Engineering Student · Video & Web Collaborator, TARUMT</p>
+        <p class="bio">This is my project collaboration that I did before with fellow TARUMT students.</p>
+        <a href="../index.html" class="btn back-btn">← Back to Portfolio</a>
+
+    </header>
+
+    <!-- Appearance setting: small button on top-left -->
+    <div class="theme-setting">
+        <button class="btn theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle appearance" title="Toggle appearance">🌙</button>
+    </div>
+
+    <main>
+        <!-- COLLABORATION SECTION -->
+        <section class="collab-section">
+            <h2 class="section-title">Collaboration</h2>
+            <div class="collab-card">
+                <span class="badge purple">TARUMT</span>
+                <h3>Student Collaboration</h3>
+                <p>
+                    This page showcases videos created in collaboration with students from
+                    Tunku Abdul Rahman University of Management and Technology (TARUMT).
+                    Together, we worked on projects to learn, build, and share our ideas in software engineering
+                    and web development.
+                </p>
+                <!-- Remarks: Edit the text above to describe your collaboration, teammate names, course, or project goals. -->
+            </div>
+        </section>
+
+        <!-- SLIDE SECTION (from slide.html) -->
+        <!-- Remarks: Edit HTML/slide.html to change slide images, captions, and links. -->
+        <section class="slide-embed-section">
+            <h2 class="section-title">Slides</h2>
+            <div class="slide-embed-card">
+                <iframe
+                    src="slide.html"
+                    title="Project slides"
+                    class="slide-embed-frame"
+                    loading="lazy">
+                </iframe>
+            </div>
+        </section>
+
+        <!-- VIDEO SECTION -->
+        <!--
+            Remarks:
+            1. Put your video file in the videos/ folder and update the src path below.
+            2. poster - image shown before play; update path or remove if not needed.
+            3. The overlay text/button sits on top of the video as a slide; clicking Play hides it.
+            4. Edit the caption/title/description to describe your video.
+            5. To add more videos, copy the whole <div class="video-slide-card">...</div> block.
+        -->
+        <section class="video-demo" id="project-video">
+            <h2 class="section-title">Project Demo Video</h2>
+
+            <div class="video-slide-card">
+                <video class="project-video" id="introVideo" controls poster="../image/IMAGE INTRO.jpg">
+                    <source src="../videos/VIDEO INTRO.mp4" type="video/mp4">
+
+                    Your browser does not support the video tag.
+                </video>
+
+                <div class="video-slide-overlay" id="videoOverlay">
+                    <span class="badge purple">Intro</span>
+                    <h3 class="video-slide-title">Portfolio Introduction</h3>
+                    <p class="video-slide-text">
+                        A short introduction about me and the frontend &amp; backend projects I built in collaboration
+                        with TARUMT students while learning software engineering and web development.
+                    </p>
+                    <button class="btn video-play-btn" type="button" onclick="playIntroVideo()">Play Video</button>
+                </div>
+            </div>
+
+            <!-- Add more video cards here by copying the block above and changing IDs/src/text -->
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Shahwal Sabri · Built with HTML, CSS &amp; Python</p>
+    </footer>
+
+    <script>
+        // Theme toggle: dark / light mode, saved in localStorage
+        (function () {
+            const key = 'theme';
+            const root = document.documentElement;
+            const btn = document.getElementById('themeToggle');
+            if (!btn) return;
+
+            const saved = localStorage.getItem(key);
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initial = saved || (prefersDark ? 'dark' : 'light');
+
+            function apply(theme) {
+                root.setAttribute('data-theme', theme);
+                const isDark = theme === 'dark';
+                btn.textContent = isDark ? '☀️' : '🌙';
+                btn.setAttribute('aria-pressed', String(isDark));
+                btn.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+                btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+            }
+
+            apply(initial);
+            btn.addEventListener('click', function () {
+                const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                localStorage.setItem(key, next);
+                apply(next);
+            });
+        })();
+    </script>
+    <script src="../script.js"></script>
+</body>
+</html>
