@@ -194,7 +194,7 @@ body {
 /* ── Main ──────────────────────────────────────────────────────── */
 main {
     flex: 1;
-    max-width: 720px;
+    max-width: 1100px;
     width: 100%;
     margin: 0 auto;
     padding: 48px 24px;
@@ -211,14 +211,13 @@ main {
 
 /* ── Project Cards ─────────────────────────────────────────────── */
 .box {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
-    flex-wrap: wrap;
 }
 
 .card {
-    flex: 1;
-    min-width: 240px;
+    min-width: 0;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -360,7 +359,8 @@ main {
 
 .slide-embed-frame {
     width: 100%;
-    height: 420px;
+    height: min(70vh, 560px);
+    min-height: 360px;
     border: 0;
     display: block;
 }
@@ -441,4 +441,55 @@ footer {
     color: var(--text-subtle);
     background: var(--surface);
     transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    main {
+        max-width: 100%;
+        padding: 40px 20px;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        padding: 52px 16px 40px;
+    }
+
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    main {
+        padding: 32px 16px;
+    }
+
+    .box {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .card,
+    .collab-card,
+    .video-info {
+        padding: 20px;
+    }
+
+    .video-slide-overlay {
+        padding: 20px;
+    }
+
+    .video-slide-title {
+        font-size: 1.15rem;
+    }
+
+    .slide-embed-frame {
+        height: 56vw;
+        min-height: 280px;
+    }
+
+    .theme-setting {
+        top: 12px;
+        left: 12px;
+    }
 }
