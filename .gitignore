@@ -14,3 +14,7 @@ __pycache__/
 # Java
 *.class
 
+# Local backend runtime files
+checkout-order-site/backend/orders.json
+checkout-order-site/backend/*.log
+
