@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shahwal Sabri — Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HERO / PROFILE SECTION -->
+    <header class="hero">
+        <div class="avatar"><img src="IMAGE/profile4.png.jpeg" alt="profile"></div>
+        <h1>Shahwal Sabri</h1>
+        <p class="role">Software Engineering Student · TARUMT</p>
+        <p class="bio">A collection of projects I built to grow my skills in frontend &amp; backend development.</p>
+    </header>
+
+    <!-- PROJECT SECTION -->
+    <main>
+        <h2 class="section-title">Projects</h2>
+
+        <div class="box">
+
+            <!-- Frontend Card -->
+            <div class="card">
+                <div class="card-top">
+                    <span class="badge purple">Frontend</span>
+                    <span class="card-count">3 projects</span>
+                </div>
+                <p class="card-label">Select a project to view</p>
+                <select id="frontend">
+                    <option value="checkout-order-site/index.html">Checkout Order</option>
+                    <option value="cafe-website/main.html">Cafe Website</option>
+                    <option value="servey-form/templates/index.html">Survey Form</option>
+                </select>
+                <button class="btn" onclick="goTo('frontend')">Open Project →</button>
+            </div>
+
+            <!-- Backend Card -->
+            <div class="card">
+                <div class="card-top">
+                    <span class="badge blue">Backend</span>
+                    <span class="card-count">3 projects</span>
+                </div>
+                <p class="card-label">Select a project to view</p>
+                <select id="backend">
+                    <option value="https://github.com/awalsabri2004-boop/ALL-WEBSITE/blob/main/cafe-website/server.py">Cafe Website API (Flask)</option>
+                    <option value="https://github.com/awalsabri2004-boop/ALL-WEBSITE/blob/main/servey-form/app.py">Survey Form (Flask)</option>
+                    <option value="https://github.com/awalsabri2004-boop/ALL-WEBSITE/blob/main/servey-form/main.py">Survey Form (main.py)</option>
+                </select>
+                <button class="btn" onclick="goTo('backend')">Open Project →</button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Shahwal Sabri · Built with HTML, CSS &amp; Python</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

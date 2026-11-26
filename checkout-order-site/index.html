@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Secure Payment Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Subtle animated gradient background */
+        .bg-scene {
+            background-color: #f8fafc;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 10% 0%, rgba(99,102,241,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 90% 100%, rgba(15,23,42,0.04) 0%, transparent 60%);
+        }
+
+        /* Glass-morphism card */
+        .card {
+            background: #ffffff;
+            border: 1px solid rgba(226,232,240,0.8);
+            box-shadow:
+                0 1px 3px rgba(15,23,42,0.04),
+                0 8px 32px rgba(15,23,42,0.06);
+            border-radius: 20px;
+            transition: box-shadow 0.3s ease;
+        }
+        .card:hover {
+            box-shadow:
+                0 1px 3px rgba(15,23,42,0.05),
+                0 16px 48px rgba(15,23,42,0.09);
+        }
+
+        /* Input field styling */
+        .field-input {
+            width: 100%;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 11px 16px;
+            font-size: 0.875rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1e293b;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+        }
+        .field-input::placeholder { color: #94a3b8; }
+        .field-input:focus {
+            border-color: #0f172a;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(15,23,42,0.07);
+        }
+
+        /* Label */
+        .field-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        /* Submit button */
+        .btn-pay {
+            width: 100%;
+            background: #0f172a;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 14px 20px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.01em;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(15,23,42,0.18);
+            margin-top: 24px;
+        }
+        .btn-pay:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(15,23,42,0.24);
+        }
+        .btn-pay:active { transform: translateY(0); }
+
+        /* Product card */
+        .product-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        /* Secure badge */
+        .secure-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #059669;
+            background: #ecfdf5;
+            border: 1px solid #d1fae5;
+            border-radius: 999px;
+            padding: 4px 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.03em;
+        }
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        /* Divider */
+        .divider { border: none; border-top: 1px solid #f1f5f9; }
+        .divider-dashed { border: none; border-top: 1px dashed #e2e8f0; }
+
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(15,23,42,0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 16px;
+        }
+        .modal-overlay.flex { display: flex; }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 24px;
+            padding: 36px 32px;
+            max-width: 360px;
+            width: 100%;
+            box-shadow: 0 24px 80px rgba(15,23,42,0.2);
+            text-align: center;
+            animation: modalIn 0.25s cubic-bezier(.34,1.56,.64,1) both;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.92) translateY(16px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Section icon bubble */
+        .section-icon {
+            width: 32px; height: 32px;
+            border-radius: 10px;
+            background: #0f172a;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Step indicator in header */
+        .step-chip {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            padding: 3px 10px;
+        }
+    </style>
+</head>
+<body class="bg-scene min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="w-full bg-white/90 backdrop-blur-md border-b border-slate-100 py-4 px-6 sticky top-0 z-50" style="box-shadow:0 1px 0 #f1f5f9;">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                </div>
+                <span class="font-bold text-base tracking-tight text-slate-900">LuxeShop</span>
+            </div>
+            <div class="secure-badge">
+                <span class="pulse-dot"></span>
+                Secure Checkout
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-10 sm:py-14 w-full flex-grow">
+        
+        <!-- Requirement 1 & 2: Single H1 and at least two section elements following it -->
+        <div class="mb-8 sm:mb-10">
+            <span class="step-chip">Step 3 of 3</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3 tracking-tight">Checkout</h1>
+            <p class="text-slate-400 text-sm mt-1 font-medium">Review your order and complete payment.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- First Section: Your Cart -->
+            <section class="card p-6 sm:p-8 flex flex-col justify-between">
+                <div>
+                    <!-- Requirement 4: H2 element with text 'Your Cart' -->
+                    <h2 class="text-base font-bold text-slate-900 mb-5 flex items-center gap-3">
+                        <div class="section-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                        Your Cart
+                    </h2>
+
+                    <div class="product-row mb-6">
+                        <!-- Requirement 5: Image with alternate text in first section -->
+                        <img src="https://cdn.freecodecamp.org/curriculum/labs/cube.jpg" alt="Rubik's cube item"
+                            class="w-[72px] h-[72px] object-cover rounded-xl border border-slate-100 flex-shrink-0"
+                            onerror="this.src='https://placehold.co/100x100/0f172a/white?text=Item'">
+                        <div class="flex-grow min-w-0">
+                            <h3 class="font-bold text-slate-900 text-sm leading-snug">Geometric Puzzle Cube</h3>
+                            <p class="text-xs text-slate-400 mt-0.5 font-medium">Limited Edition Collector Item</p>
+                            <div class="flex items-center justify-between mt-3">
+                                <span class="text-xs font-semibold text-slate-400 bg-slate-100 rounded-full px-2.5 py-0.5">Qty: 1</span>
+                                <span class="font-extrabold text-slate-900 text-base">$29.99</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 space-y-2.5">
+                    <hr class="divider mb-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-400 font-medium">Subtotal</span>
+                        <span class="font-semibold text-slate-700">$29.99</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-400 font-medium">Shipping</span>
+                        <span class="font-semibold text-emerald-600">Free</span>
+                    </div>
+                    <hr class="divider-dashed my-1">
+                    <div class="flex justify-between items-center pt-1">
+                        <span class="font-bold text-slate-900 text-sm">Total Due</span>
+                        <span class="font-extrabold text-slate-900 text-xl">$29.99</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Second Section: Payment Information -->
+            <section class="card p-6 sm:p-8">
+                <!-- Requirement 6: H2 element with text 'Payment Information' -->
+                <h2 class="text-base font-bold text-slate-900 mb-5 flex items-center gap-3">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                    </div>
+                    Payment Information
+                </h2>
+
+                <!-- Requirement 7: form element within second section -->
+                <form id="checkout-form" class="space-y-4" onsubmit="handleSubmit(event)">
+                    
+                    <!-- Card Name Input Group (Required) -->
+                    <div>
+                        <label for="card-name" class="field-label">
+                            Cardholder Name <span aria-hidden="true" class="text-rose-500">*</span>
+                        </label>
+                        <!-- Requirement 8 & 9: id, name, type='text' -->
+                        <!-- Requirement 13 & 14 & 15: required attribute & span with '*' and aria-hidden="true" -->
+                        <input type="text" id="card-name" name="card-name" required placeholder="John Doe"
+                            class="field-input">
+                    </div>
+
+                    <!-- Card Number Input Group (Required) -->
+                    <div>
+                        <label for="card-number" class="field-label">
+                            Card Number <span aria-hidden="true" class="text-rose-500">*</span>
+                        </label>
+                        <!-- Requirement 10 & 11: id, name, type='text' -->
+                        <!-- Requirement 13: required attribute -->
+                        <!-- Requirement 18: aria-describedby set to card-number-help -->
+                        <input type="text" id="card-number" name="card-number" required placeholder="XXXX XXXX XXXX XXXX" aria-describedby="card-number-help" maxlength="19"
+                            class="field-input" style="font-variant-numeric: tabular-nums; letter-spacing: 0.04em;">
+                        
+                        <!-- Requirement 16 & 17: p element with id card-number-help immediately after card-number input with help text -->
+                        <p id="card-number-help" class="text-xs text-slate-400 mt-1.5 leading-relaxed">Enter a valid 16-digit credit card number without spaces or dashes.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label for="expiry" class="field-label">
+                                Expiry Date <span aria-hidden="true" class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" id="expiry" name="expiry" required placeholder="MM/YY" maxlength="5"
+                                class="field-input">
+                        </div>
+                        <div>
+                            <label for="cvv" class="field-label">
+                                CVV <span aria-hidden="true" class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" id="cvv" name="cvv" required placeholder="123" maxlength="4"
+                                class="field-input">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="pay-btn" class="btn-pay">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <span id="pay-btn-text">Complete Secure Payment ($29.99)</span>
+                    </button>
+
+                    <p id="pay-status" class="text-xs text-slate-400 text-center mt-3 min-h-[20px]"></p>
+
+                    <!-- Trust badges -->
+                    <div class="flex items-center justify-center gap-4 pt-1">
+                        <span class="text-xs text-slate-400 flex items-center gap-1 font-medium">
+                            <svg class="w-3.5 h-3.5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            SSL Encrypted
+                        </span>
+                        <span class="text-slate-200">|</span>
+                        <span class="text-xs text-slate-400 flex items-center gap-1 font-medium">
+                            <svg class="w-3.5 h-3.5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/></svg>
+                            PCI Compliant
+                        </span>
+                    </div>
+                </form>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Custom Modal Message Box (Ensures no alert() is used per policy) -->
+    <div id="msg-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+                 style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900 mb-1 tracking-tight">Payment Successful!</h3>
+            <p id="modal-text" class="text-sm text-slate-400 mb-7 leading-relaxed">Your order has been placed successfully.</p>
+            <button onclick="closeModal()"
+                class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors text-sm cursor-pointer"
+                style="letter-spacing:0.01em;">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-6 text-xs text-slate-400 border-t border-slate-100 mt-auto font-medium">
+        &copy; 2026 LuxeShop Inc. All rights reserved. Encrypted &amp; Protected.
+    </footer>
+
+    <script>
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const form = document.getElementById('checkout-form');
+            const btn = document.getElementById('pay-btn');
+            const btnText = document.getElementById('pay-btn-text');
+            const status = document.getElementById('pay-status');
+            const modal = document.getElementById('msg-modal');
+            const modalText = document.getElementById('modal-text');
+
+            btn.disabled = true;
+            btn.style.opacity = '0.75';
+            btnText.textContent = 'Processing...';
+            status.textContent = 'Sending order to Java backend...';
+
+            const payload = {
+                'card-name': form['card-name'].value,
+                'card-number': form['card-number'].value,
+                'expiry': form['expiry'].value,
+                'cvv': form['cvv'].value
+            };
+
+            try {
+                const res = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(result.message || 'Server error');
+
+                modalText.textContent = 'Your order was received by the Java backend successfully.';
+                status.textContent = '';
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                form.reset();
+            } catch (err) {
+                status.textContent = 'Could not reach the Java backend. Run it from checkout-order-site/backend, then try again.';
+            } finally {
+                btn.disabled = false;
+                btn.style.opacity = '';
+                btnText.textContent = 'Complete Secure Payment ($29.99)';
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('msg-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
